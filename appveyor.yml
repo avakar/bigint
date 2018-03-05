@@ -1,0 +1,22 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+clone_folder: c:\projects\bigint
+
+install:
+  - mkdir C:\projects\deps
+  - cd C:\projects\deps
+
+  - appveyor DownloadFile "https://cmake.org/files/v3.10/cmake-3.10.0-win64-x64.zip" -FileName cmake.zip
+  - 7z x cmake.zip -oC:\projects\deps > nul
+  - move C:\projects\deps\cmake-* C:\projects\deps\cmake
+  - set PATH=C:\projects\deps\cmake\bin;%PATH%
+  - cmake --version
+
+before_build:
+  - cd c:\projects\bigint
+  - mkdir _build
+  - cd _build
+  - cmake ..
+
+build:
+  project: _build/avakar_bigint.sln
