@@ -88,7 +88,7 @@ struct _digitizer<D, I, typename std::enable_if<!_cint::is_unsigned_integer<I>::
 	using _extr = _bit_extractor<D, std::numeric_limits<_u>::digits>;
 	static constexpr size_t needed_digits = _extr::last_bit_digit + 1;
 
-	static constexpr void digitize(D * dest, I const & src)
+	static void digitize(D * dest, I const & src)
 	{
 		_extr::extract(dest, static_cast<_u>(src));
 		if (dest[_extr::last_bit_digit] & _extr::sign_mask)

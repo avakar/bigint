@@ -14,7 +14,10 @@
 TEST_CASE("cint small digit operations")
 {
 	using X = avakar::_cint::digits<uint16_t>;
-	using R = typename X::result;
+	using R = std::pair<uint16_t, uint16_t>;
+
+#define A(a, b, c) R{ avakar::_cint::add_digits<uint16_t, a, b, c>::hi, avakar::_cint::add_digits<uint16_t, a, b, c>::lo }
+#define M(a, b, c) R{ avakar::_cint::mul_digits<uint16_t, a, b, c>::hi, avakar::_cint::mul_digits<uint16_t, a, b, c>::lo }
 
 	using avakar::_cint::sext;
 
@@ -29,33 +32,33 @@ TEST_CASE("cint small digit operations")
 	REQUIRE(sext<uint16_t>(0x8000) == 0xffff);
 	REQUIRE(sext<uint16_t>(0xffff) == 0xffff);
 
-	REQUIRE(X::add(0, 0, 0) == R{ 0, 0 });
-	REQUIRE(X::add(1, 1, 1) == R{ 0, 3 });
-	REQUIRE(X::add(0xff, 1, 1) == R{ 0, 0x101 });
+	REQUIRE(A(0, 0, 0) == R{ 0, 0 });
+	REQUIRE(A(1, 1, 1) == R{ 0, 3 });
+	REQUIRE(A(0xff, 1, 1) == R{ 0, 0x101 });
 	
-	REQUIRE(X::add(0xffff, 0x0000, 0) == R{ 0, 0xffff });
-	REQUIRE(X::add(0xffff, 0x0001, 0) == R{ 1, 0x0000 });
-	REQUIRE(X::add(0xffff, 0x0001, 1) == R{ 1, 0x0001 });
-	REQUIRE(X::add(0xffff, 0xffff, 1) == R{ 1, 0xffff });
+	REQUIRE(A(0xffff, 0x0000, 0) == R{ 0, 0xffff });
+	REQUIRE(A(0xffff, 0x0001, 0) == R{ 1, 0x0000 });
+	REQUIRE(A(0xffff, 0x0001, 1) == R{ 1, 0x0001 });
+	REQUIRE(A(0xffff, 0xffff, 1) == R{ 1, 0xffff });
 
-	REQUIRE(X::add(0xffff, 0xffff, 0xffff) == R{ 2, 0xfffd });
+	REQUIRE(A(0xffff, 0xffff, 0xffff) == R{ 2, 0xfffd });
 
-	REQUIRE(X::mul(0, 0, 0) == R{ 0, 0 });
-	REQUIRE(X::mul(1, 1, 0) == R{ 0, 1 });
-	REQUIRE(X::mul(1, 1, 0xffff) == R{ 1, 0 });
+	REQUIRE(M(0, 0, 0) == R{ 0, 0 });
+	REQUIRE(M(1, 1, 0) == R{ 0, 1 });
+	REQUIRE(M(1, 1, 0xffff) == R{ 1, 0 });
 
-	REQUIRE(X::mul(0xffff, 1, 0) == R{ 0, 0xffff });
-	REQUIRE(X::mul(0xffff, 1, 1) == R{ 1, 0x0000 });
-	REQUIRE(X::mul(0xffff, 1, 2) == R{ 1, 0x0001 });
+	REQUIRE(M(0xffff, 1, 0) == R{ 0, 0xffff });
+	REQUIRE(M(0xffff, 1, 1) == R{ 1, 0x0000 });
+	REQUIRE(M(0xffff, 1, 2) == R{ 1, 0x0001 });
 
-	REQUIRE(X::mul(0xffff, 2, 0) == R{ 1, 0xfffe });
-	REQUIRE(X::mul(0xffff, 2, 1) == R{ 1, 0xffff });
-	REQUIRE(X::mul(0xffff, 2, 2) == R{ 2, 0x0000 });
-	REQUIRE(X::mul(0xffff, 2, 3) == R{ 2, 0x0001 });
+	REQUIRE(M(0xffff, 2, 0) == R{ 1, 0xfffe });
+	REQUIRE(M(0xffff, 2, 1) == R{ 1, 0xffff });
+	REQUIRE(M(0xffff, 2, 2) == R{ 2, 0x0000 });
+	REQUIRE(M(0xffff, 2, 3) == R{ 2, 0x0001 });
 
-	REQUIRE(X::mul(0xffff, 0xffff, 0) == R{ 0xfffe, 0x0001 });
-	REQUIRE(X::mul(0xffff, 0xffff, 1) == R{ 0xfffe, 0x0002 });
-	REQUIRE(X::mul(0xffff, 0xffff, 0xffff) == R{ 0xffff, 0x0000 });
+	REQUIRE(M(0xffff, 0xffff, 0) == R{ 0xfffe, 0x0001 });
+	REQUIRE(M(0xffff, 0xffff, 1) == R{ 0xfffe, 0x0002 });
+	REQUIRE(M(0xffff, 0xffff, 0xffff) == R{ 0xffff, 0x0000 });
 }
 
 template <uint16_t d0, uint16_t... dn>

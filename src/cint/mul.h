@@ -21,28 +21,28 @@ using mul_t = trim_t<typename mul<A, B>::type>;
 template <typename A, digit_t<A> b, digit_t<A> c, typename = void>
 struct _mul_one
 {
-	static constexpr auto _r = digits<digit_t<A>>::mul(head<A>::value, b, c);
+	using _r = mul_digits<digit_t<A>, head<A>::value, b, c>;
 
 	using type = prepend_t<
-		typename _mul_one<tail_t<A>, b, _r.first>::type,
-		_r.second
+		typename _mul_one<tail_t<A>, b, _r::hi>::type,
+		_r::lo
 		>;
 };
 
 template <typename D, D a0, D b, D c>
 struct _mul_one<cint<D, a0>, b, c, typename std::enable_if<(a0 & digits<D>::sign_mask) == 0>::type>
 {
-	static constexpr auto _r = digits<D>::mul(a0, b, c);
+	using _r = mul_digits<D, a0, b, c>;
 
-	using type = cint<D, _r.second, _r.first>;
+	using type = cint<D, _r::lo, _r::hi>;
 };
 
 template <typename D, D a0, D b, D c>
 struct _mul_one<cint<D, a0>, b, c, typename std::enable_if<(a0 & digits<D>::sign_mask) != 0>::type>
 {
-	static constexpr auto _r = digits<D>::mul(a0, b, c);
+	using _r = mul_digits<D, a0, b, c>;
 
-	using type = cint<D, _r.second, digits<D>::add(_r.first, digits<D>::neg(b), 0).second>;
+	using type = cint<D, _r::lo, add_digits<D, _r::hi, neg_digit(b), 0>::lo>;
 };
 
 template <typename A, typename B, typename = void>

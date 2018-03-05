@@ -41,55 +41,52 @@ struct digits
 
 	static constexpr D _hwidth = width / 2;
 	static constexpr D _lomask = ((D)1 << _hwidth) - 1;
+};
 
-	using result = std::pair<D, D>;
-
-	static constexpr D neg(D v)
-	{
-		return ~v + 1;
-	}
-
+template <typename D, D a, D b, D c>
+struct add_digits
+	: private digits<D>
+{
 	// computes `hi:lo = a + b + c`
-	static constexpr result add(D a, D b, D c)
-	{
-		D _r0 = (a & _lomask) + (b & _lomask) + (c & _lomask);
-		D _r1 = (a >> _hwidth) + (b >> _hwidth) + (c >> _hwidth) + (_r0 >> _hwidth);
 
-		D hi = _r1 >> _hwidth;
-		D lo = ((_r1 & _lomask) << _hwidth) | (_r0 & _lomask);
+	static constexpr D _r0 = (a & _lomask) + (b & _lomask) + (c & _lomask);
+	static constexpr D _r1 = (a >> _hwidth) + (b >> _hwidth) + (c >> _hwidth) + (_r0 >> _hwidth);
 
-		return { hi, lo };
-	}
+	static constexpr D hi = _r1 >> _hwidth;
+	static constexpr D lo = ((_r1 & _lomask) << _hwidth) | (_r0 & _lomask);
+};
 
+
+template <typename D, D a, D b, D c>
+struct mul_digits
+	: private digits<D>
+{
 	// computes `hi:lo = a * b + c`
-	static constexpr result mul(D a, D b, D c)
-	{
-		D _r0 = (a & _lomask) * (b & _lomask);
-		D _r1 = (a & _lomask) * (b >> _hwidth);
-		D _r2 = (a >> _hwidth) * (b & _lomask);
-		D _r3 = (a >> _hwidth) * (b >> _hwidth);
 
-		D _s0 = (_r0 & _lomask) + (c & _lomask);
-		D _s1 = (_r2 & _lomask) + (_r1 & _lomask) + (_r0 >> _hwidth) + (_s0 >> _hwidth) + (c >> _hwidth);
-		D _s2 = (_r3 & _lomask) + (_r2 >> _hwidth) + (_r1 >> _hwidth) + (_s1 >> _hwidth);
-		D _s3 = (_r3 >> _hwidth) + (_s2 >> _hwidth);
+	static constexpr D _r0 = (a & _lomask) * (b & _lomask);
+	static constexpr D _r1 = (a & _lomask) * (b >> _hwidth);
+	static constexpr D _r2 = (a >> _hwidth) * (b & _lomask);
+	static constexpr D _r3 = (a >> _hwidth) * (b >> _hwidth);
 
-		D lo = (_s0 & _lomask) | ((_s1 & _lomask) << _hwidth);
-		D hi = (_s2 & _lomask) | ((_s3 & _lomask) << _hwidth);
+	static constexpr D _s0 = (_r0 & _lomask) + (c & _lomask);
+	static constexpr D _s1 = (_r2 & _lomask) + (_r1 & _lomask) + (_r0 >> _hwidth) + (_s0 >> _hwidth) + (c >> _hwidth);
+	static constexpr D _s2 = (_r3 & _lomask) + (_r2 >> _hwidth) + (_r1 >> _hwidth) + (_s1 >> _hwidth);
+	static constexpr D _s3 = (_r3 >> _hwidth) + (_s2 >> _hwidth);
 
-		return { hi, lo };
-	}
-
-	static constexpr result shl(D a, D s)
-	{
-		return { a >> (width - s), a << s };
-	}
+	static constexpr D lo = (_s0 & _lomask) | ((_s1 & _lomask) << _hwidth);
+	static constexpr D hi = (_s2 & _lomask) | ((_s3 & _lomask) << _hwidth);
 };
 
 template <typename D>
 constexpr D sext(D v)
 {
 	return v & digits<D>::sign_mask? digits<D>::max: digits<D>::min;
+}
+
+template <typename D>
+constexpr D neg_digit(D v)
+{
+	return ~v + 1;
 }
 
 }
