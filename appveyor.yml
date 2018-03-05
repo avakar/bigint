@@ -1,6 +1,12 @@
 version: 1.0.{build}
-image: Visual Studio 2017
 clone_folder: c:\projects\bigint
+
+image:
+- Visual Studio 2017
+- Visual Studio 2015
+configuration:
+- Debug
+- Release
 
 install:
   - mkdir C:\projects\deps
