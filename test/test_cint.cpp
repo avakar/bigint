@@ -1,4 +1,3 @@
-#include <avakar/cint.h>
 #include "../src/cint/digits.h"
 #include "../src/cint/shift.h"
 #include "../src/cint/prepend.h"
@@ -343,14 +342,6 @@ TEST_CASE("cint: operators")
 	REQUIRE((V(0x55) & V(0x5a)) == V(0x50));
 	REQUIRE((V(0x55) | V(0x5a)) == V(0x5f));
 	REQUIRE((V(0x55) ^ V(0x5a)) == V(0x0f));
-}
-
-TEST_CASE("cint: literals")
-{
-	using avakar::literals::operator""_z;
-
-	REQUIRE(0_z + 0_z == 0_z);
-	REQUIRE(1_z * -2_z == -2_z);
 }
 
 template <typename T, T v>

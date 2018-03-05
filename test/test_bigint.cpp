@@ -1,6 +1,8 @@
 #include "../src/bigint/bigint.h"
+#include "../src/cint/strtoc.h"
+#include "../src/cint/operators.h"
 #include "../src/generic_traits.h"
-#include <avakar/cint.h>
+
 #include <stdint.h>
 #include "catch.hpp"
 

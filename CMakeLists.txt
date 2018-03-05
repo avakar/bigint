@@ -4,7 +4,6 @@ project(avakar_bigint)
 
 add_library(avakar_bigint
 	include/avakar/bigint.h
-	include/avakar/cint.h
 
 	src/generic_traits.h
 	src/msvc_x86_traits.h
