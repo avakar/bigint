@@ -3,7 +3,7 @@
 
 #include "../../src/bigint/bigint.h"
 #include "../../src/cint/strtoc.h"
-#include "../../src/cint/operators.h"
+#include "../../src/cint/cint.h"
 #include "../../src/traits.h"
 
 namespace avakar {

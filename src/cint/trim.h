@@ -15,7 +15,7 @@ template <typename C>
 using trim_t = typename _trim<C>::type;
 
 
-template <typename C, typename C::digit d>
+template <typename C, digit_t<C> d>
 struct _prepend_trim;
 
 template <typename D, D d0, D d>

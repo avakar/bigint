@@ -6,10 +6,10 @@
 namespace avakar {
 namespace _cint {
 
-template <typename C, typename C::digit d>
+template <typename C, digit_t<C> d>
 struct prepend;
 
-template <typename C, typename C::digit d>
+template <typename C, digit_t<C> d>
 using prepend_t = typename prepend<C, d>::type;
 
 

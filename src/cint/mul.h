@@ -18,10 +18,10 @@ using mul_t = trim_t<typename mul<A, B>::type>;
 
 
 
-template <typename A, typename A::digit b, typename A::digit c, typename = void>
+template <typename A, digit_t<A> b, digit_t<A> c, typename = void>
 struct _mul_one
 {
-	static constexpr auto _r = digits<typename A::digit>::mul(head<A>::value, b, c);
+	static constexpr auto _r = digits<digit_t<A>>::mul(head<A>::value, b, c);
 
 	using type = prepend_t<
 		typename _mul_one<tail_t<A>, b, _r.first>::type,

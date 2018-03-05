@@ -11,6 +11,15 @@ template <typename D, D d0, D... dn>
 struct cint;
 
 template <typename A>
+struct digit;
+
+template <typename A>
+using digit_t = typename digit<A>::type;
+
+template <typename D>
+using digit_width_t = cint<D, digits<D>::width>;
+
+template <typename A>
 struct head;
 
 template <typename X>
@@ -19,10 +28,13 @@ struct tail;
 template <typename C>
 using tail_t = typename tail<C>::type;
 
-template <typename D>
-using cwidth_t = cint<D, digits<D>::width>;
 
 
+template <typename D, D... dn>
+struct digit<cint<D, dn...>>
+{
+	using type = D;
+};
 
 template <typename D, D d0, D... dn>
 struct head<cint<D, d0, dn...>>

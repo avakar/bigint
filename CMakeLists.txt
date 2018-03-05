@@ -22,11 +22,9 @@ add_library(avakar_bigint
 	src/cint/fwd.h
 	src/cint/make.h
 	src/cint/mul.h
-	src/cint/operators.h
 	src/cint/prepend.h
 	src/cint/shift.h
 	src/cint/strtoc.h
-	src/cint/traits.h
 	src/cint/trim.h
 	)
 target_include_directories(avakar_bigint PUBLIC include)

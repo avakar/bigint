@@ -11,10 +11,10 @@ namespace avakar {
 namespace _cint {
 
 template <typename A, typename B>
-struct is_equal
-	: std::is_same<trim_t<A>, trim_t<B>>
-{
-};
+using is_equal = std::is_same<trim_t<A>, trim_t<B>>;
+
+template <typename A>
+using is_zero = is_equal<A, cint<digit_t<A>, 0>>;
 
 template <typename C>
 struct is_negative

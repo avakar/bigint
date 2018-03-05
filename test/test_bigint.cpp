@@ -1,6 +1,6 @@
 #include "../src/bigint/bigint.h"
 #include "../src/cint/strtoc.h"
-#include "../src/cint/operators.h"
+#include "../src/cint/cint.h"
 #include "../src/generic_traits.h"
 
 #include <stdint.h>

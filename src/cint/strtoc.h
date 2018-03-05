@@ -3,7 +3,6 @@
 
 #include "mul.h"
 #include "add.h"
-#include "cint.h"
 
 namespace avakar {
 namespace _cint {
