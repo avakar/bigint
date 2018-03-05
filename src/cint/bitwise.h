@@ -13,7 +13,7 @@ struct bitwise_and
 {
 	using type = prepend_t<
 		typename bitwise_and<tail_t<A>, tail_t<B>>::type,
-		A::head & B::head
+		head<A>::value & head<B>::value
 		>;
 };
 
@@ -32,7 +32,7 @@ struct bitwise_or
 {
 	using type = prepend_t<
 		typename bitwise_or<tail_t<A>, tail_t<B>>::type,
-		A::head | B::head
+		head<A>::value | head<B>::value
 	>;
 };
 
@@ -51,7 +51,7 @@ struct bitwise_xor
 {
 	using type = prepend_t<
 		typename bitwise_xor<tail_t<A>, tail_t<B>>::type,
-		A::head ^ B::head
+		head<A>::value ^ head<B>::value
 	>;
 };
 

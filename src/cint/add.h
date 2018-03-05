@@ -25,7 +25,7 @@ using sub_t = add_t<A, neg_t<B>>;
 template <typename A, typename B, typename A::digit c>
 struct _add
 {
-	static constexpr auto _r = digits<typename A::digit>::add(A::head, B::head, c);
+	static constexpr auto _r = digits<typename A::digit>::add(head<A>::value, head<B>::value, c);
 
 	using type = prepend_t<
 		typename _add<tail_t<A>, tail_t<B>, _r.first>::type,

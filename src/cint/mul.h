@@ -21,7 +21,7 @@ using mul_t = trim_t<typename mul<A, B>::type>;
 template <typename A, typename A::digit b, typename A::digit c, typename = void>
 struct _mul_one
 {
-	static constexpr auto _r = digits<typename A::digit>::mul(A::head, b, c);
+	static constexpr auto _r = digits<typename A::digit>::mul(head<A>::value, b, c);
 
 	using type = prepend_t<
 		typename _mul_one<tail_t<A>, b, _r.first>::type,
@@ -50,7 +50,7 @@ struct _mul_all
 {
 	using type = add_t<
 		prepend_t<mul_t<A, tail_t<B>>, 0>,
-		typename _mul_one<A, B::head, 0>::type>;
+		typename _mul_one<A, head<B>::value, 0>::type>;
 };
 
 template <typename D, typename A, D b0>

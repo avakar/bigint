@@ -14,9 +14,6 @@ struct cint
 	using digit = D;
 	using digit_width = cint<D, digits<D>::width>;
 
-	static constexpr D head = d0;
-	using tail = tail_t<cint<D, d0, dn...>>;
-
 	constexpr explicit operator bool() const
 	{
 		return !is_zero<cint<D, d0, dn...>>::value;

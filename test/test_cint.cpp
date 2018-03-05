@@ -241,6 +241,8 @@ TEST_CASE("cint: shift")
 	TT(shift_right_t<C<0x100>, C<1>>, C<0x80>);
 	TT(shift_right_t<C<0x100>, C<0xf1>>, C<0>);
 	TT(shift_right_t<C<0x100>, C<0x7fff>>, C<0>);
+
+	TT(shift_right_t<C<0, 0x100>, C<1>>, C<0, 0x80>);
 }
 
 using avakar::_cint::parse_literal_t;

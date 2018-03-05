@@ -1,7 +1,6 @@
 #ifndef AVAKAR_BIGINT_CINT_DIGITS_H
 #define AVAKAR_BIGINT_CINT_DIGITS_H
 
-#include "fwd.h"
 #include <limits>
 #include <utility>
 
@@ -86,9 +85,6 @@ struct digits
 		return { a >> (width - s), a << s };
 	}
 };
-
-template <typename D>
-using cwidth_t = cint<D, digits<D>::width>;
 
 template <typename D>
 constexpr D sext(D v)
