@@ -11,20 +11,40 @@
 
 #include "catch.hpp"
 
+struct R
+{
+	R(uint16_t hi, uint16_t lo)
+		: _hi(hi), _lo(lo)
+	{
+	}
+
+	operator std::pair<uint16_t, uint16_t>() const
+	{
+		return { _hi, _lo };
+	}
+
+	friend bool operator==(R const & lhs, R const & rhs)
+	{
+		return lhs._hi == rhs._hi && lhs._lo == rhs._lo;
+	}
+
+	uint16_t _hi;
+	uint16_t _lo;
+};
+
 TEST_CASE("cint small digit operations")
 {
 	using X = avakar::_cint::digits<uint16_t>;
-	using R = std::pair<uint16_t, uint16_t>;
 
 #define A(a, b, c) R{ avakar::_cint::add_digits<uint16_t, a, b, c>::hi, avakar::_cint::add_digits<uint16_t, a, b, c>::lo }
 #define M(a, b, c) R{ avakar::_cint::mul_digits<uint16_t, a, b, c>::hi, avakar::_cint::mul_digits<uint16_t, a, b, c>::lo }
 
 	using avakar::_cint::sext;
 
-	REQUIRE(X::min == 0);
-	REQUIRE(X::max == 0xffff);
-	REQUIRE(X::width == 16);
-	REQUIRE(X::sign_mask == 0x8000);
+	REQUIRE((X::min == 0));
+	REQUIRE((X::max == 0xffff));
+	REQUIRE((X::width == 16));
+	REQUIRE((X::sign_mask == 0x8000));
 
 	REQUIRE(sext<uint16_t>(0) == 0);
 	REQUIRE(sext<uint16_t>(1) == 0);

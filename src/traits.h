@@ -12,6 +12,17 @@ using bigint_traits = msvc_x86_traits;
 }
 }
 
+#elif defined(__GNUC__)
+
+#include "gcc_traits.h"
+namespace avakar {
+namespace _bigint {
+
+using bigint_traits = gcc_traits;
+
+}
+}
+
 #else
 
 #include "generic_traits.h"

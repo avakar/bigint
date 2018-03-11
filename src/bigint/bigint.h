@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <cassert>
+#include <stdexcept>
 
 namespace avakar {
 namespace _bigint {

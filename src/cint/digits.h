@@ -38,16 +38,15 @@ struct digits
 	static constexpr D max = std::numeric_limits<D>::max();
 	static constexpr D width = std::numeric_limits<D>::digits;
 	static constexpr D sign_mask = (D)1 << (width - 1);
-
-	static constexpr D _hwidth = width / 2;
-	static constexpr D _lomask = ((D)1 << _hwidth) - 1;
 };
 
 template <typename D, D a, D b, D c>
 struct add_digits
-	: private digits<D>
 {
 	// computes `hi:lo = a + b + c`
+
+	static constexpr D _hwidth = std::numeric_limits<D>::digits / 2;
+	static constexpr D _lomask = ((D)1 << _hwidth) - 1;
 
 	static constexpr D _r0 = (a & _lomask) + (b & _lomask) + (c & _lomask);
 	static constexpr D _r1 = (a >> _hwidth) + (b >> _hwidth) + (c >> _hwidth) + (_r0 >> _hwidth);
@@ -59,9 +58,11 @@ struct add_digits
 
 template <typename D, D a, D b, D c>
 struct mul_digits
-	: private digits<D>
 {
 	// computes `hi:lo = a * b + c`
+
+	static constexpr D _hwidth = std::numeric_limits<D>::digits / 2;
+	static constexpr D _lomask = ((D)1 << _hwidth) - 1;
 
 	static constexpr D _r0 = (a & _lomask) * (b & _lomask);
 	static constexpr D _r1 = (a & _lomask) * (b >> _hwidth);

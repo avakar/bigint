@@ -2,12 +2,23 @@ cmake_minimum_required(VERSION 3.2)
 
 project(avakar_bigint)
 
+if (MSVC)
+	set(bigint_traits_src
+		src/msvc_x86_traits.cpp
+		src/msvc_x86_traits.h
+		)
+else()
+	set(bigint_traits_src
+		src/gcc_traits.cpp
+		src/gcc_traits.h
+		)
+endif()
+
 add_library(avakar_bigint
 	include/avakar/bigint.h
 
 	src/generic_traits.h
-	src/msvc_x86_traits.h
-	src/msvc_x86_traits.cpp
+	${bigint_traits_src}
 	src/traits.h
 
 	src/bigint/bigint.h
@@ -36,6 +47,10 @@ add_executable(avakar_bigint_test
 	test/test_public.cpp
 	)
 target_link_libraries(avakar_bigint_test PUBLIC avakar_bigint)
+
+set_target_properties(avakar_bigint avakar_bigint_test PROPERTIES
+	CXX_STANDARD 11
+	CXX_STANDARD_REQUIRED 1)
 
 source_group(include\\avakar REGULAR_EXPRESSION include/.*)
 source_group(src REGULAR_EXPRESSION src/.*)
