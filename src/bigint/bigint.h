@@ -74,7 +74,7 @@ struct _digitizer<D, I, typename std::enable_if<_cint::is_unsigned_integer<I>::v
 	using _extr = _bit_extractor<D, std::numeric_limits<I>::digits>;
 	static constexpr size_t needed_digits = _extr::sext_bit_digit + 1;
 
-	static constexpr void digitize(D * dest, I const & src)
+	static void digitize(D * dest, I const & src)
 	{
 		_extr::extract(dest, src);
 	}
@@ -101,7 +101,7 @@ template <typename D>
 struct _digitizer<D, bool>
 {
 	static constexpr size_t needed_digits = 1;
-	static constexpr void digitize(D * dest, bool src)
+	static void digitize(D * dest, bool src)
 	{
 		*dest = src;
 	}
