@@ -358,10 +358,10 @@ TEST_CASE("cint: operators")
 	REQUIRE(~V(0xffff) == V(0));
 	REQUIRE(~V(0x8000) == V(0x7fff));
 
-	REQUIRE(V(1) << V(5) == V(32));
-	REQUIRE(V(1) >> V(0) == V(1));
-	REQUIRE(V(1) >> V(1) == V(0));
-	REQUIRE(V(1) >> V(2) == V(0));
+	REQUIRE((V(1) << V(5)) == V(32));
+	REQUIRE((V(1) >> V(0)) == V(1));
+	REQUIRE((V(1) >> V(1)) == V(0));
+	REQUIRE((V(1) >> V(2)) == V(0));
 
 
 	REQUIRE((V(0x55) & V(0x5a)) == V(0x50));
