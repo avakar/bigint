@@ -12,44 +12,39 @@ namespace avakar {
 namespace _cint {
 
 template <typename A, typename S, typename = void>
-struct shift_left;
+struct _shift_left;
 
 template <typename A, typename S>
-using shift_left_t = trim_t<typename shift_left<A, S>::type>;
+using shift_left_t = trim_t<typename _shift_left<A, S, typename std::enable_if<is_cint<A>::value && is_cint<S>::value>::type>::type>;
 
 template <typename A, typename S>
 using shift_right_t = shift_left_t<A, neg_t<S>>;
 
 
-template <typename A, digit_t<A> s, digit_t<A> c>
+template <typename A, digit_t s, digit_t c>
 struct _shl
 {
-	using _dig = digit_t<A>;
-	static constexpr auto _w = digits<_dig>::width;
-	static_assert(0 < s && s < _w, "XXX");
+	static_assert(0 < s && s < digit_width, "XXX");
 
 	using type = prepend_t<
-		typename _shl<tail_t<A>, s, (head<A>::value >> (_w - s))>::type,
-		_dig(head<A>::value << s) | c
+		typename _shl<tail_t<A>, s, (head<A>::value >> (digit_width - s))>::type,
+		digit_t(head<A>::value << s) | c
 	>;
 };
 
-template <typename D, D d0, D s, D c>
-struct _shl<cint<D, d0>, s, c>
+template <digit_t d0, digit_t s, digit_t c>
+struct _shl<cint<d0>, s, c>
 {
-	static constexpr D _d1 = sext(d0);
-	static constexpr D _w = digits<D>::width;
-	static_assert(0 < s && s < _w, "XXX");
+	static constexpr digit_t _d1 = sext(d0);
+	static_assert(0 < s && s < digit_width, "XXX");
 
-	using type = cint<D, D(d0 << s) | c, D(_d1 << s) | (d0 >> (_w - s))>;
+	using type = cint<digit_t(d0 << s) | c, digit_t(_d1 << s) | (d0 >> (digit_width - s))>;
 };
 
-template <typename A, digit_t<A> s>
+template <typename A, digit_t s>
 struct _shr
 {
-	using _digit = digit_t<A>;
-	static constexpr auto _w = digits<_digit>::width;
-	static_assert(0 < s && s < _w, "XXX");
+	static_assert(0 < s && s < digit_width, "XXX");
 
 	using _r = _shr<tail_t<A>, s>;
 
@@ -57,59 +52,58 @@ struct _shr
 		typename _r::type,
 		(head<A>::value >> s) | _r::cout
 	>;
+	static constexpr digit_t cout = digit_t(head<A>::value << (digit_width - s));
 };
 
-template <typename D, D d0, D s>
-struct _shr<cint<D, d0>, s>
+template <digit_t d0, digit_t s>
+struct _shr<cint<d0>, s>
 {
-	static constexpr D _d1 = sext(d0);
-	static constexpr D _w = digits<D>::width;
-	static_assert(0 < s && s < _w, "XXX");
+	static_assert(0 < s && s < digit_width, "XXX");
 
-	using type = cint<D, (d0 >> s) | _d1 << (_w - s)>;
-	static constexpr D cout = D(d0 << (_w - s));
+	using type = cint<(d0 >> s) | sext(d0) << (digit_width - s)>;
+	static constexpr digit_t cout = digit_t(d0 << (digit_width - s));
 };
 
 template <typename A, typename S>
-struct shift_left<A, S, typename std::enable_if<!is_less<S, digit_width_t<digit_t<A>>>::value>::type>
+struct _shift_left<A, S, typename std::enable_if<!is_less<S, digit_width_t>::value>::type>
 {
-	using type = typename shift_left<
+	using type = typename _shift_left<
 		prepend_t<A, 0>,
-		sub_t<S, digit_width_t<digit_t<A>>>
+		sub_t<S, digit_width_t>
 		>::type;
 };
 
 template <typename A, typename S>
-struct shift_left<A, S, typename std::enable_if<is_positive<S>::value && is_less<S, digit_width_t<digit_t<A>>>::value>::type>
+struct _shift_left<A, S, typename std::enable_if<is_positive<S>::value && is_less<S, digit_width_t>::value>::type>
 	: _shl<A, head<S>::value, 0>
 {
 };
 
 template <typename A, typename S>
-struct shift_left<A, S, typename std::enable_if<is_zero<S>::value>::type>
+struct _shift_left<A, S, typename std::enable_if<is_zero<S>::value>::type>
 {
 	using type = A;
 };
 
 template <typename A, typename S>
-struct shift_left<A, S, typename std::enable_if<is_less<neg_t<digit_width_t<digit_t<A>>>, S>::value && is_negative<S>::value>::type>
+struct _shift_left<A, S, typename std::enable_if<is_less<neg_t<digit_width_t>, S>::value && is_negative<S>::value>::type>
 	: _shr<A, head<neg_t<S>>::value>
 {
 };
 
-template <typename D, D d0, D d1, D... dn, typename S>
-struct shift_left<cint<D, d0, d1, dn...>, S, typename std::enable_if<!is_less<neg_t<digit_width_t<D>>, S>::value>::type>
+template <digit_t d0, digit_t d1, digit_t... dn, typename S>
+struct _shift_left<cint<d0, d1, dn...>, S, typename std::enable_if<!is_less<neg_t<digit_width_t>, S>::value>::type>
 {
-	using type = typename shift_left<
-		cint<D, d1, dn...>,
-		add_t<S, digit_width_t<D>>
+	using type = typename _shift_left<
+		cint<d1, dn...>,
+		add_t<S, digit_width_t>
 	>::type;
 };
 
-template <typename D, D d0, typename S>
-struct shift_left<cint<D, d0>, S, typename std::enable_if<!is_less<neg_t<digit_width_t<D>>, S>::value>::type>
+template <digit_t d0, typename S>
+struct _shift_left<cint<d0>, S, typename std::enable_if<!is_less<neg_t<digit_width_t>, S>::value>::type>
 {
-	using type = cint<D, sext(d0)>;
+	using type = cint<sext(d0)>;
 };
 
 }

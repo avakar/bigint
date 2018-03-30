@@ -15,10 +15,10 @@ template <typename C>
 using com_t = trim_t<typename _com<C>::type>;
 
 
-template <typename D, D... dn>
-struct _com<cint<D, dn...>>
+template <digit_t d0, digit_t... dn>
+struct _com<cint<d0, dn...>>
 {
-	using type = cint<D, (dn ^ digits<D>::max)...>;
+	using type = cint<d0 ^ digit_max, (dn ^ digit_max)...>;
 };
 
 }

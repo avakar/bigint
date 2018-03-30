@@ -7,17 +7,13 @@
 namespace avakar {
 namespace _cint {
 
-template <typename D, D d0, D... dn>
+template <digit_t d0, digit_t... dn>
 struct cint;
 
-template <typename A>
-struct digit;
+template <typename T>
+struct is_cint;
 
-template <typename A>
-using digit_t = typename digit<A>::type;
-
-template <typename D>
-using digit_width_t = cint<D, digits<D>::width>;
+using digit_width_t = cint<digit_width>;
 
 template <typename A>
 struct head;
@@ -30,28 +26,34 @@ using tail_t = typename tail<C>::type;
 
 
 
-template <typename D, D... dn>
-struct digit<cint<D, dn...>>
-{
-	using type = D;
-};
-
-template <typename D, D d0, D... dn>
-struct head<cint<D, d0, dn...>>
-	: std::integral_constant<D, d0>
+template <typename T>
+struct is_cint
+	: std::false_type
 {
 };
 
-template <typename D, D d0, D d1, D... dn>
-struct tail<cint<D, d0, d1, dn...>>
+template <digit_t a0, digit_t... an>
+struct is_cint<cint<a0, an...>>
+	: std::true_type
 {
-	using type = cint<D, d1, dn...>;
 };
 
-template <typename D, D d0>
-struct tail<cint<D, d0>>
+template <digit_t d0, digit_t... dn>
+struct head<cint<d0, dn...>>
+	: std::integral_constant<digit_t, d0>
 {
-	using type = cint<D, sext(d0)>;
+};
+
+template <digit_t d0, digit_t d1, digit_t... dn>
+struct tail<cint<d0, d1, dn...>>
+{
+	using type = cint<d1, dn...>;
+};
+
+template <digit_t d0>
+struct tail<cint<d0>>
+{
+	using type = cint<sext(d0)>;
 };
 
 }

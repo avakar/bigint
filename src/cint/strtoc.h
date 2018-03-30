@@ -7,77 +7,77 @@
 namespace avakar {
 namespace _cint {
 
-template <typename D, char... cn>
+template <char... cn>
 struct parse_literal;
 
-template <typename D, char... cn>
-using parse_literal_t = typename parse_literal<D, cn...>::type;
+template <char... cn>
+using parse_literal_t = typename parse_literal<cn...>::type;
 
 
-template <typename D, D b, typename A, char... cn>
+template <digit_t b, typename A, char... cn>
 struct _strtoc;
 
-template <typename D, D b, typename A, char c0, char... cn>
-struct _strtoc<D, b, A, c0, cn...>
+template <digit_t b, typename A, char c0, char... cn>
+struct _strtoc<b, A, c0, cn...>
 {
-	static constexpr D _value =
+	static constexpr digit_t _value =
 		'0' <= c0 && c0 <= '9' ? c0 - '0' :
 		'A' <= c0 && c0 <= 'F' ? c0 - 'A' + 10 :
 		c0 - 'a' + 10;
 
 	using _next = add_t<
-		mul_t<A, cint<D, b>>,
-		cint<D, _value>
+		mul_t<A, cint<b>>,
+		cint<_value>
 		>;
 
-	using type = typename _strtoc<D, b, _next, cn...>::type;
+	using type = typename _strtoc<b, _next, cn...>::type;
 };
 
-template <typename D, D b, typename A>
-struct _strtoc<D, b, A>
+template <digit_t b, typename A>
+struct _strtoc<b, A>
 {
 	using type = A;
 };
 
-template <typename D, D b, typename A, char... cn>
-struct _strtoc<D, b, A, '\'', cn...>
-	: _strtoc<D, b, A, cn...>
+template <digit_t b, typename A, char... cn>
+struct _strtoc<b, A, '\'', cn...>
+	: _strtoc<b, A, cn...>
 {
 };
 
-template <typename D, char... cn>
+template <char... cn>
 struct parse_literal
-	: _strtoc<D, 10, cint<D, 0>, cn...>
+	: _strtoc<10, cint<0>, cn...>
 {
 };
 
-template <typename D, char... cn>
-struct parse_literal<D, '0', 'x', cn...>
-	: _strtoc<D, 16, cint<D, 0>, cn...>
+template <char... cn>
+struct parse_literal<'0', 'x', cn...>
+	: _strtoc<16, cint<0>, cn...>
 {
 };
 
-template <typename D, char... cn>
-struct parse_literal<D, '0', 'X', cn...>
-	: _strtoc<D, 16, cint<D, 0>, cn...>
+template <char... cn>
+struct parse_literal<'0', 'X', cn...>
+	: _strtoc<16, cint<0>, cn...>
 {
 };
 
-template <typename D, char... cn>
-struct parse_literal<D, '0', 'b', cn...>
-	: _strtoc<D, 2, cint<D, 0>, cn...>
+template <char... cn>
+struct parse_literal<'0', 'b', cn...>
+	: _strtoc<2, cint<0>, cn...>
 {
 };
 
-template <typename D, char... cn>
-struct parse_literal<D, '0', 'B', cn...>
-	: _strtoc<D, 2, cint<D, 0>, cn...>
+template <char... cn>
+struct parse_literal<'0', 'B', cn...>
+	: _strtoc<2, cint<0>, cn...>
 {
 };
 
-template <typename D, char... cn>
-struct parse_literal<D, '0', cn...>
-	: _strtoc<D, 8, cint<D, 0>, cn...>
+template <char... cn>
+struct parse_literal<'0', cn...>
+	: _strtoc<8, cint<0>, cn...>
 {
 };
 

@@ -1,6 +1,7 @@
 #ifndef AVAKAR_BIGINT_CINT_CINT_H
 #define AVAKAR_BIGINT_CINT_CINT_H
 
+#include "strtoc.h"
 #include "compare.h"
 #include "bitwise.h"
 #include "shift.h"
@@ -11,12 +12,12 @@
 namespace avakar {
 namespace _cint {
 
-template <typename D, D d0, D... dn>
+template <digit_t d0, digit_t... dn>
 struct cint
 {
 	constexpr explicit operator bool() const
 	{
-		return !is_zero<cint<D, d0, dn...>>::value;
+		return !is_zero<cint<d0, dn...>>::value;
 	}
 };
 
@@ -53,23 +54,26 @@ constexpr bitwise_or_t<A, B> operator|(A, B) { return {}; }
 template <typename A, typename B>
 constexpr bitwise_xor_t<A, B> operator^(A, B) { return {}; }
 
-template <typename D, D... an, D... bn>
-constexpr bool operator==(cint<D, an...>, cint<D, bn...>) { return is_equal<cint<D, an...>, cint<D, bn...>>::value; }
+template <digit_t... an, digit_t... bn>
+constexpr bool operator==(cint<an...>, cint<bn...>) { return is_equal<cint<an...>, cint<bn...>>::value; }
 
-template <typename D, D... an, D... bn>
-constexpr bool operator!=(cint<D, an...>, cint<D, bn...>) { return !is_equal<cint<D, an...>, cint<D, bn...>>::value; }
+template <digit_t... an, digit_t... bn>
+constexpr bool operator!=(cint<an...>, cint<bn...>) { return !is_equal<cint<an...>, cint<bn...>>::value; }
 
-template <typename D, D... an, D... bn>
-constexpr bool operator<(cint<D, an...>, cint<D, bn...>) { return is_less<cint<D, an...>, cint<D, bn...>>::value; }
+template <digit_t... an, digit_t... bn>
+constexpr bool operator<(cint<an...>, cint<bn...>) { return is_less<cint<an...>, cint<bn...>>::value; }
 
-template <typename D, D... an, D... bn>
-constexpr bool operator>(cint<D, an...>, cint<D, bn...>) { return is_less<cint<D, bn...>, cint<D, an...>>::value; }
+template <digit_t... an, digit_t... bn>
+constexpr bool operator>(cint<an...>, cint<bn...>) { return is_less<cint<bn...>, cint<an...>>::value; }
 
-template <typename D, D... an, D... bn>
-constexpr bool operator<=(cint<D, an...>, cint<D, bn...>) { return !is_less<cint<D, bn...>, cint<D, an...>>::value; }
+template <digit_t... an, digit_t... bn>
+constexpr bool operator<=(cint<an...>, cint<bn...>) { return !is_less<cint<bn...>, cint<an...>>::value; }
 
-template <typename D, D... an, D... bn>
-constexpr bool operator>=(cint<D, an...>, cint<D, bn...>) { return !is_less<cint<D, an...>, cint<D, bn...>>::value; }
+template <digit_t... an, digit_t... bn>
+constexpr bool operator>=(cint<an...>, cint<bn...>) { return !is_less<cint<an...>, cint<bn...>>::value; }
+
+template <char... cn>
+parse_literal_t<cn...> operator""_z() { return {}; }
 
 }
 }

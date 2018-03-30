@@ -29,6 +29,7 @@ add_library(avakar_bigint
 	src/cint/cint.h
 	src/cint/compare.h
 	src/cint/complement.h
+	src/cint/digitize.h
 	src/cint/digits.h
 	src/cint/fwd.h
 	src/cint/make.h

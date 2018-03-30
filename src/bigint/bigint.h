@@ -2,6 +2,7 @@
 #define AVAKAR_BIGINT_BIGINT_BIGINT_H
 
 #include "../cint/cint.h"
+#include "../cint/digitize.h"
 
 #include <type_traits>
 #include <algorithm>
@@ -142,9 +143,9 @@ struct bigint
 	{
 	}
 
-	template <_digit... dn>
-	bigint(cint<_digit, dn...>)
-		: _digits{ dn... }
+	template <_cint::digit_t... dn>
+	bigint(cint<dn...>)
+		: bigint(_cint::digitize_t<_digit, cint<dn...>>{})
 	{
 	}
 
@@ -354,7 +355,7 @@ struct bigint
 
 		if (lhs_first != lhs_last)
 		{
-			_digit s = _cint::sext(rhs_last[-1]);
+			_digit s = _traits::sext(rhs_last[-1]);
 			while (lhs_first != lhs_last)
 			{
 				if (*lhs_first++ != s)
@@ -363,7 +364,7 @@ struct bigint
 		}
 		else
 		{
-			_digit s = _cint::sext(lhs_last[-1]);
+			_digit s = _traits::sext(lhs_last[-1]);
 			while (rhs_first != rhs_last)
 			{
 				if (*rhs_first++ != s)
@@ -383,7 +384,7 @@ struct bigint
 	{
 		// TODO: inefficient, requires allocation
 		bigint diff = lhs - rhs;
-		return diff._get_span().back() & _cint::digits<_digit>::sign_mask;
+		return diff._get_span().back() & Traits::sign_mask;
 	}
 
 	friend bool operator>(bigint const & lhs, bigint const & rhs)
@@ -403,6 +404,12 @@ struct bigint
 
 private:
 	using _traits = Traits;
+
+	template <_digit... dn>
+	bigint(_cint::digit_sequence<_digit, dn...>)
+		: _digits{ dn... }
+	{
+	}
 
 	void _resize(size_t size)
 	{

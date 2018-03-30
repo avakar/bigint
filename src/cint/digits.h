@@ -1,11 +1,52 @@
 #ifndef AVAKAR_BIGINT_CINT_DIGITS_H
 #define AVAKAR_BIGINT_CINT_DIGITS_H
 
+#include <cstdint>
 #include <limits>
 #include <utility>
 
 namespace avakar {
 namespace _cint {
+
+using digit_t = std::uint_least32_t;
+
+static constexpr digit_t digit_max = 0xffffffff;
+static constexpr digit_t digit_width = 32;
+static constexpr digit_t sign_mask = 0x80000000;
+
+constexpr digit_t sext(digit_t v)
+{
+	return v & sign_mask? digit_max: 0;
+}
+
+constexpr digit_t neg_digit(digit_t v)
+{
+	return v == 0? 0: ((~v + 1) & digit_max);
+}
+
+template <digit_t a, digit_t b, digit_t c>
+struct add_digits
+{
+	static constexpr auto _r
+		= (std::uint_least64_t)a
+		+ (std::uint_least64_t)b
+		+ (std::uint_least64_t)c;
+
+	static constexpr digit_t lo = _r & digit_max;
+	static constexpr digit_t hi = (_r >> digit_width) & digit_max;
+};
+
+template <digit_t a, digit_t b, digit_t c>
+struct mul_digits
+{
+	static constexpr auto _r
+		= (std::uint_least64_t)a
+		* (std::uint_least64_t)b
+		+ (std::uint_least64_t)c;
+
+	static constexpr digit_t lo = _r & digit_max;
+	static constexpr digit_t hi = (_r >> digit_width) & digit_max;
+};
 
 template <typename T>
 struct is_unsigned_integer
@@ -28,67 +69,6 @@ struct is_valid_digit
 	>
 {
 };
-
-template <typename D>
-struct digits
-{
-	static_assert(is_valid_digit<D>::value, "D is not a valid digit type");
-
-	static constexpr D min = std::numeric_limits<D>::min();
-	static constexpr D max = std::numeric_limits<D>::max();
-	static constexpr D width = std::numeric_limits<D>::digits;
-	static constexpr D sign_mask = (D)1 << (width - 1);
-};
-
-template <typename D, D a, D b, D c>
-struct add_digits
-{
-	// computes `hi:lo = a + b + c`
-
-	static constexpr D _hwidth = std::numeric_limits<D>::digits / 2;
-	static constexpr D _lomask = ((D)1 << _hwidth) - 1;
-
-	static constexpr D _r0 = (a & _lomask) + (b & _lomask) + (c & _lomask);
-	static constexpr D _r1 = (a >> _hwidth) + (b >> _hwidth) + (c >> _hwidth) + (_r0 >> _hwidth);
-
-	static constexpr D hi = _r1 >> _hwidth;
-	static constexpr D lo = ((_r1 & _lomask) << _hwidth) | (_r0 & _lomask);
-};
-
-
-template <typename D, D a, D b, D c>
-struct mul_digits
-{
-	// computes `hi:lo = a * b + c`
-
-	static constexpr D _hwidth = std::numeric_limits<D>::digits / 2;
-	static constexpr D _lomask = ((D)1 << _hwidth) - 1;
-
-	static constexpr D _r0 = (a & _lomask) * (b & _lomask);
-	static constexpr D _r1 = (a & _lomask) * (b >> _hwidth);
-	static constexpr D _r2 = (a >> _hwidth) * (b & _lomask);
-	static constexpr D _r3 = (a >> _hwidth) * (b >> _hwidth);
-
-	static constexpr D _s0 = (_r0 & _lomask) + (c & _lomask);
-	static constexpr D _s1 = (_r2 & _lomask) + (_r1 & _lomask) + (_r0 >> _hwidth) + (_s0 >> _hwidth) + (c >> _hwidth);
-	static constexpr D _s2 = (_r3 & _lomask) + (_r2 >> _hwidth) + (_r1 >> _hwidth) + (_s1 >> _hwidth);
-	static constexpr D _s3 = (_r3 >> _hwidth) + (_s2 >> _hwidth);
-
-	static constexpr D lo = (_s0 & _lomask) | ((_s1 & _lomask) << _hwidth);
-	static constexpr D hi = (_s2 & _lomask) | ((_s3 & _lomask) << _hwidth);
-};
-
-template <typename D>
-constexpr D sext(D v)
-{
-	return v & digits<D>::sign_mask? digits<D>::max: digits<D>::min;
-}
-
-template <typename D>
-constexpr D neg_digit(D v)
-{
-	return ~v + 1;
-}
 
 }
 }

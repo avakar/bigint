@@ -10,15 +10,16 @@ template <typename D, typename DD>
 struct generic_traits
 {
 	using digit_type = D;
+	static constexpr digit_type sign_mask = digit_type(1) << (std::numeric_limits<digit_type>::digits - 1);
 
 	static digit_type sext(digit_type d)
 	{
-		return is_negative(d)? avakar::_cint::digits<digit_type>::max: 0;
+		return is_negative(d)? std::numeric_limits<digit_type>::max(): 0;
 	}
 
 	static bool is_negative(digit_type d)
 	{
-		return d & avakar::_cint::digits<digit_type>::sign_mask;
+		return d & sign_mask;
 	}
 
 	static digit_type addn(digit_type * dest, digit_type const * src, size_t len)
@@ -76,7 +77,7 @@ struct generic_traits
 			dest[i] += carry;
 			new_carry += (dest[i] < carry);
 
-			carry = new_carry + (r >> _cint::digits<digit_type>::width);
+			carry = new_carry + (r >> std::numeric_limits<digit_type>::digits);
 		}
 
 		return carry;

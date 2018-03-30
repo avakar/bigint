@@ -9,35 +9,35 @@
 namespace avakar {
 namespace _cint {
 
-template <typename A, typename B, digit_t<A> c>
+template <typename A, typename B, digit_t c>
 struct _add;
 
 template <typename A, typename B>
 using add_t = trim_t<typename _add<A, B, 0>::type>;
 
 template <typename A>
-using neg_t = add_t<com_t<A>, cint<digit_t<A>, 1>>;
+using neg_t = add_t<com_t<A>, cint<1>>;
 
 template <typename A, typename B>
 using sub_t = add_t<A, neg_t<B>>;
 
-template <typename A, typename B, digit_t<A> c>
-struct _add
+template <digit_t a0, digit_t... an, digit_t b0, digit_t... bn, digit_t c>
+struct _add<cint<a0, an...>, cint<b0, bn...>, c>
 {
-	using _r = add_digits<digit_t<A>, head<A>::value, head<B>::value, c>;
+	using _r = add_digits<a0, b0, c>;
 
 	using type = prepend_t<
-		typename _add<tail_t<A>, tail_t<B>, _r::hi>::type,
+		typename _add<tail_t<cint<a0, an...>>, tail_t<cint<b0, bn...>>, _r::hi>::type,
 		_r::lo>;
 };
 
-template <typename D, D a0, D b0, D c>
-struct _add<cint<D, a0>, cint<D, b0>, c>
+template <digit_t a0, digit_t b0, digit_t c>
+struct _add<cint<a0>, cint<b0>, c>
 {
-	using _lo = add_digits<D, a0, b0, c>;
-	using _hi = add_digits<D, sext(a0), sext(b0), _lo::hi>;
+	using _lo = add_digits<a0, b0, c>;
+	using _hi = add_digits<sext(a0), sext(b0), _lo::hi>;
 
-	using type = cint<D, _lo::lo, _hi::lo>;
+	using type = cint<_lo::lo, _hi::lo>;
 };
 
 }

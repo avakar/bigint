@@ -4,14 +4,6 @@
 
 using B = avakar::bigint;
 
-TEST_CASE("cint: operator _z")
-{
-	using avakar::operator""_z;
-
-	REQUIRE(0_z + 0_z == 0_z);
-	REQUIRE(1_z * -2_z == -2_z);
-}
-
 TEST_CASE("bigint: public mul")
 {
 	using avakar::operator""_z;

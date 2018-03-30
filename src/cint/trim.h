@@ -15,34 +15,34 @@ template <typename C>
 using trim_t = typename _trim<C>::type;
 
 
-template <typename C, digit_t<C> d>
+template <typename C, digit_t d>
 struct _prepend_trim;
 
-template <typename D, D d0, D d>
-struct _prepend_trim<cint<D, d0>, d>
+template <digit_t d0, digit_t d>
+struct _prepend_trim<cint<d0>, d>
 {
 	using type = typename std::conditional<
 		sext(d) != d0,
-		cint<D, d, d0>,
-		cint<D, d>>::type;
+		cint<d, d0>,
+		cint<d>>::type;
 };
 
-template <typename D, D d0, D d1, D... dn, D d>
-struct _prepend_trim<cint<D, d0, d1, dn...>, d>
+template <digit_t d0, digit_t d1, digit_t... dn, digit_t d>
+struct _prepend_trim<cint<d0, d1, dn...>, d>
 {
-	using type = cint<D, d, d0, d1, dn...>;
+	using type = cint<d, d0, d1, dn...>;
 };
 
-template <typename D, D d0>
-struct _trim<cint<D, d0>>
+template <digit_t d0>
+struct _trim<cint<d0>>
 {
-	using type = cint<D, d0>;
+	using type = cint<d0>;
 };
 
-template <typename D, D d0, D d1, D... dn>
-struct _trim<cint<D, d0, d1, dn...>>
+template <digit_t d0, digit_t d1, digit_t... dn>
+struct _trim<cint<d0, d1, dn...>>
 {
-	using type = typename _prepend_trim<trim_t<cint<D, d1, dn...>>, d0>::type;
+	using type = typename _prepend_trim<trim_t<cint<d1, dn...>>, d0>::type;
 };
 
 
