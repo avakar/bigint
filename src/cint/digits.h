@@ -24,6 +24,12 @@ constexpr digit_t neg_digit(digit_t v)
 	return v == 0? 0: ((~v + 1) & digit_max);
 }
 
+template <typename D>
+constexpr typename std::enable_if<std::is_unsigned<D>::value, bool>::type sign_flag(D v)
+{
+	return (v & (D(1) << (std::numeric_limits<D>::digits - 1))) != 0;
+}
+
 template <digit_t a, digit_t b, digit_t c>
 struct add_digits
 {

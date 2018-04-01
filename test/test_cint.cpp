@@ -509,3 +509,136 @@ TEST_CASE("cint: digitize")
 	TT(digitize_t<uint64_t, C<0x00000000, 0x80000000>>, S64<0x8000000000000000>);
 	TT(digitize_t<uint64_t, C<0xffffffff, 0x7fffffff, 0xffffffff>>, S64<0x7fffffffffffffff, 0xffffffffffffffff>);
 }
+
+enum E : int16_t { e1, e2, e3 };
+enum class F : int16_t { e1, e2, e3 };
+
+TEST_CASE("cint: convert")
+{
+	using avakar::_cint::operator""_z;
+
+#define CC(type, value) { type _v = value ## _z; REQUIRE(_v == (type)value); }
+#define CCE(type, value) { type _v = (type)value ## _z; REQUIRE(_v == (type)value); }
+
+	CCE(uint8_t, -0x10001);
+	CCE(uint8_t, -0x10000);
+	CCE(uint8_t, -0xffff);
+	CCE(uint8_t, -0xfffe);
+	CCE(uint8_t, -0x8001);
+	CCE(uint8_t, -0x8000);
+	CCE(uint8_t, -0x7fff);
+	CCE(uint8_t, -0x7ffe);
+	CCE(uint8_t, -2);
+	CCE(uint8_t, -1);
+	CC(uint8_t, 0);
+	CC(uint8_t, 1);
+	CC(uint8_t, 0x00ff);
+	CCE(uint8_t, 0x0100);
+	CCE(uint8_t, 0x0101);
+	CCE(uint8_t, 0x7fff);
+	CCE(uint8_t, 0x8000);
+	CCE(uint8_t, 0x8001);
+	CCE(uint8_t, 0xfffe);
+	CCE(uint8_t, 0xffff);
+	CCE(uint8_t, 0x10000);
+	CCE(uint8_t, 0x10001);
+	CCE(uint8_t, 0x1ffff);
+	CCE(uint8_t, 0x20000);
+	CCE(uint8_t, 0x7fffffff);
+	CCE(uint8_t, 0x80000000);
+	CCE(uint8_t, 0x80000001);
+
+	CCE(uint16_t, -0x10001);
+	CCE(uint16_t, -0x10000);
+	CCE(uint16_t, -0xffff);
+	CCE(uint16_t, -0xfffe);
+	CCE(uint16_t, -0x8001);
+	CCE(uint16_t, -0x8000);
+	CCE(uint16_t, -0x7fff);
+	CCE(uint16_t, -0x7ffe);
+	CCE(uint16_t, -2);
+	CCE(uint16_t, -1);
+	CC(uint16_t, 0);
+	CC(uint16_t, 1);
+	CC(uint16_t, 0x00ff);
+	CC(uint16_t, 0x0100);
+	CC(uint16_t, 0x0101);
+	CC(uint16_t, 0x7fff);
+	CC(uint16_t, 0x8000);
+	CC(uint16_t, 0x8001);
+	CC(uint16_t, 0xfffe);
+	CC(uint16_t, 0xffff);
+	CCE(uint16_t, 0x10000);
+	CCE(uint16_t, 0x10001);
+	CCE(uint16_t, 0x1ffff);
+	CCE(uint16_t, 0x20000);
+	CCE(uint16_t, 0x7fffffff);
+	CCE(uint16_t, 0x80000000);
+	CCE(uint16_t, 0x80000001);
+
+	CCE(int16_t, -0x10001);
+	CCE(int16_t, -0x10000);
+	CCE(int16_t, -0xffff);
+	CCE(int16_t, -0xfffe);
+	CCE(int16_t, -0x8001);
+	CC(int16_t, -0x8000);
+	CC(int16_t, -0x7fff);
+	CC(int16_t, -0x7ffe);
+	CC(int16_t, -2);
+	CC(int16_t, -1);
+	CC(int16_t, 0);
+	CC(int16_t, 1);
+	CC(int16_t, 0x00ff);
+	CC(int16_t, 0x0100);
+	CC(int16_t, 0x0101);
+	CC(int16_t, 0x7fff);
+	CCE(int16_t, 0x8000);
+	CCE(int16_t, 0x8001);
+	CCE(int16_t, 0xfffe);
+	CCE(int16_t, 0xffff);
+	CCE(int16_t, 0x10000);
+	CCE(int16_t, 0x10001);
+	CCE(int16_t, 0x1ffff);
+	CCE(int16_t, 0x20000);
+	CCE(int16_t, 0x7fffffff);
+	CCE(int16_t, 0x80000000);
+	CCE(int16_t, 0x80000001);
+
+	CCE(int8_t, -0x10001);
+	CCE(int8_t, -0x10000);
+	CCE(int8_t, -0xffff);
+	CCE(int8_t, -0xfffe);
+	CCE(int8_t, -0x8001);
+	CCE(int8_t, -0x8000);
+	CCE(int8_t, -0x7fff);
+	CCE(int8_t, -0x7ffe);
+	CC(int8_t, -2);
+	CC(int8_t, -1);
+	CC(int8_t, 0);
+	CC(int8_t, 1);
+	CCE(int8_t, 0x00ff);
+	CCE(int8_t, 0x0100);
+	CCE(int8_t, 0x0101);
+	CCE(int8_t, 0x7fff);
+	CCE(int8_t, 0x8000);
+	CCE(int8_t, 0x8001);
+	CCE(int8_t, 0xfffe);
+	CCE(int8_t, 0xffff);
+	CCE(int8_t, 0x10000);
+	CCE(int8_t, 0x10001);
+	CCE(int8_t, 0x1ffff);
+	CCE(int8_t, 0x20000);
+	CCE(int8_t, 0x7fffffff);
+	CCE(int8_t, 0x80000000);
+	CCE(int8_t, 0x80000001);
+
+	CC(E, -1);
+	CC(E, 0);
+	CC(E, 0x7fff);
+	CCE(E, 0x8000);
+
+	CCE(F, -1);
+	CCE(F, 0);
+	CCE(F, 0x7fff);
+	CCE(F, 0x8000);
+}

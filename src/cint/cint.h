@@ -1,6 +1,7 @@
 #ifndef AVAKAR_BIGINT_CINT_CINT_H
 #define AVAKAR_BIGINT_CINT_CINT_H
 
+#include "digitize.h"
 #include "strtoc.h"
 #include "compare.h"
 #include "bitwise.h"
@@ -17,7 +18,23 @@ struct cint
 {
 	constexpr explicit operator bool() const
 	{
-		return !is_zero<cint<d0, dn...>>::value;
+		return !is_zero<cint>::value;
+	}
+
+	template <
+		typename T,
+		typename std::enable_if<convert<T, cint>::implicit, int>::type = 0>
+	constexpr operator T() const
+	{
+		return convert<T, cint>::value;
+	}
+
+	template <
+		typename T,
+		typename std::enable_if<!convert<T, cint>::implicit, int>::type = 0>
+	constexpr explicit operator T() const
+	{
+		return convert<T, cint>::value;
 	}
 };
 
