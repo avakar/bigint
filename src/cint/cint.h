@@ -90,7 +90,7 @@ template <digit_t... an, digit_t... bn>
 constexpr bool operator>=(cint<an...>, cint<bn...>) { return !is_less<cint<an...>, cint<bn...>>::value; }
 
 template <char... cn>
-parse_literal_t<cn...> operator""_z() { return {}; }
+constexpr parse_literal_t<cn...> operator""_z() { return {}; }
 
 }
 }

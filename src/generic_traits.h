@@ -82,6 +82,14 @@ struct generic_traits
 
 		return carry;
 	}
+
+	static digit_type cmpn(digit_type const * lhs, digit_type const * rhs, size_t len)
+	{
+		digit_type borrow = 0;
+		for (size_t i = 0; i != len; ++i)
+			borrow = (lhs[i] < borrow) | (lhs[i] - borrow < rhs[i]);
+		return borrow;
+	}
 };
 
 }

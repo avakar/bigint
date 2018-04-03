@@ -22,6 +22,12 @@ struct _digitize;
 template <typename T, typename I>
 using digitize_t = typename _digitize<T, I>::type;
 
+template <typename T, size_t N, typename I, typename S = digit_sequence<T>>
+struct _digitize_fixed;
+
+template <typename T, size_t N, typename I>
+using digitize_fixed_t = typename _digitize_fixed<T, N, I>::type;
+
 template <typename T, typename A, typename = void>
 struct _convert;
 
@@ -83,6 +89,19 @@ struct _digitize<T, cint<a0, an...>>
 {
 	using _e = _extract<T, cint<a0, an...>>;
 	using type = typename _digitize_next<typename _e::next, digit_sequence<T, _e::value>, sign_flag(_e::value)>::type;
+};
+
+template <typename T, size_t N, typename I, T... dn>
+struct _digitize_fixed<T, N, I, digit_sequence<T, dn...>>
+{
+	using _e = _extract<T, I>;
+	using type = typename _digitize_fixed<T, N - 1, typename _e::next, digit_sequence<T, dn..., _e::value>>::type;
+};
+
+template <typename T, typename I, T... dn>
+struct _digitize_fixed<T, 0, I, digit_sequence<T, dn...>>
+{
+	using type = digit_sequence<T, dn...>;
 };
 
 template <typename T, typename A>

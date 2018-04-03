@@ -16,7 +16,9 @@ endif()
 
 add_library(avakar_bigint
 	include/avakar/bigint.h
+	include/avakar/intn.h
 
+	src/digitizer.h
 	src/generic_traits.h
 	${bigint_traits_src}
 	src/traits.h
@@ -38,12 +40,15 @@ add_library(avakar_bigint
 	src/cint/shift.h
 	src/cint/strtoc.h
 	src/cint/trim.h
+
+	src/intn/intn.h
 	)
 target_include_directories(avakar_bigint PUBLIC include)
 
 add_executable(avakar_bigint_test
 	test/test_bigint.cpp
 	test/test_cint.cpp
+	test/test_intn.cpp
 	test/test_main.cpp
 	test/test_public.cpp
 	)
@@ -57,4 +62,5 @@ source_group(include\\avakar REGULAR_EXPRESSION include/.*)
 source_group(src REGULAR_EXPRESSION src/.*)
 source_group(src\\bigint REGULAR_EXPRESSION src/bigint/.*)
 source_group(src\\cint REGULAR_EXPRESSION src/cint/.*)
+source_group(src\\intn REGULAR_EXPRESSION src/intn/.*)
 source_group(test REGULAR_EXPRESSION test/.*)
